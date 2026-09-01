@@ -29,3 +29,7 @@ Thumbs.db
 appsettings.Development.json
 appsettings.Local.json
 *.local.json
+
+# Local developer guide / change log (Ignored by Git)
+GUIA_CAMBIOS_PLANTILLA.md
+TEMPLATE_GENERALIZATION_GUIDE.md

@@ -1,4 +1,4 @@
-# SENA Virtual 2D Backend 🚀
+# Unity 2D Multiplayer .NET Backend Template 🚀
 
 ![.NET Core](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-13.0-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
@@ -10,59 +10,59 @@
 
 ## 1. Descripción General
 
-**SENA Virtual 2D Backend** es la plataforma de servicios distribuidos y comunicación en tiempo real desarrollada para potenciar los ambientes de aprendizaje interactivos bidimensionales del **SENA Virtual**. 
+**Unity 2D Multiplayer .NET Backend Template** es una plantilla base (*starter template / boilerplate*) modular de alto rendimiento desarrollada en C# y .NET Core, diseñada para servir como infraestructura backend en **juegos multijugador 2D y entornos virtuales espaciales en Unity** (estilo *Gather Town*, RPGs 2D *top-down*, salas virtuales de interacción espacial o juegos sociales).
 
-Inspirado en ecosistemas de interacción espacial (como *Gather Town* o *Gartic Town*), este sistema permite a **aprendices e instructores** conectarse a aulas, laboratorios y auditorios virtuales 2D. A través de este servidor backend, los usuarios desplazan sus avatares en un plano cartesiano interactivo, participan en debates mediante **chat global o espacial (por proximidad)**, y activan **nodos interactivos** en tiempo real (acceso a guías de aprendizaje en PDF, enlaces a conferencias, tableros colaborativos y evaluaciones).
+La plantilla proporciona un motor desacoplado y listo para producción que gestiona la **presencia y movimiento 2D en tiempo real**, **mensajería espacial por proximidad y global**, **sincronización de objetos/nodos interactivos en el mapa** y **gestión de salas/instancias de juego**, manteniendo una arquitectura limpia y extensible.
 
-### Propósito Técnico y Educativo
-* **Educativo:** Facilitar la inmersión, el trabajo colaborativo y la presencialidad remota interactiva en los programas de formación del SENA, rompiendo la barrera de las videollamadas tradicionales.
-* **Técnico:** Proporcionar un motor backend escalable, resiliente y de baja latencia capaz de sincronizar estados de presencia espacial, mensajería concurrente e interacciones dinámicas mediante arquitectura limpia y contratos orientados a eventos.
+### Propósito Técnico y Arquitectónico
+* **Plantilla Reutilizable:** Eliminar el trabajo repetitivo al iniciar nuevos proyectos multijugador 2D en Unity, proporcionando una base sólida con WebSockets, persistencia y Clean Architecture.
+* **Escalabilidad y Baja Latencia:** Sincronizar el estado de múltiples jugadores en planos cartesianos 2D con latencias mínimas y capacidad de escalado horizontal mediante Redis Backplane.
 
 ---
 
 ## 2. Justificación Técnica del Stack (C# / .NET Core)
 
-La elección de **C# y .NET Core** como lenguaje y framework principal responde a decisiones de arquitectura estratégica orientadas al ciclo de vida del software, rendimiento y mantenibilidad:
+La elección de **C# y .NET Core** como stack primario del servidor backend permite una integración nativa y transparente con juegos creados en **Unity**:
 
 * 🤝 **Unificación de Lenguaje con el Cliente Unity 2D:**
-  El motor cliente de la aplicación 2D interactiva se desarrolla en **Unity**, cuyo lenguaje primario es C#. Emplear C# en el backend permite compartir DTOs, estructuras de datos, enumeraciones y modelos de dominio entre cliente y servidor, reduciendo fricciones de serialización y facilitando la rotación de aprendices/desarrolladores entre ambas capas.
+  Unity utiliza C# como su lenguaje principal de desarrollo. Implementar el servidor en C# y .NET permite **compartir DTOs, estructuras de datos, enumeraciones y lógica de dominio** entre cliente y servidor, reduciendo errores de serialización y acelerando el ritmo de desarrollo.
 
 * ⚡ **SignalR para WebSockets de Alto Rendimiento:**
-  ASP.NET Core SignalR abstrae la complejidad de la conexión bidireccional cliente-servidor a través de WebSockets (con fallback automático a Server-Sent Events o Long Polling). Facilita el manejo de grupos por sala (*Rooms*), la difusión masiva de coordenadas $X,Y$ y el escalado horizontal mediante Redis Backplane.
+  ASP.NET Core SignalR abstrae la comunicación en tiempo real cliente-servidor mediante WebSockets (con fallback automático). Ofrece un manejo nativo de grupos por sala (*Rooms*), difusión de coordenadas $X,Y$ y escalabilidad distribuida mediante Redis Backplane.
 
 * 🚀 **Rendimiento, Concurrencia y Bajo Consumo:**
-  .NET ofrece un rendimiento superior en pruebas comparativas de procesamiento HTTP y WebSockets gracias al servidor Kestrel, la gestión eficiente de memoria con `Span<T>` / `Memory<T>` y el modelo asíncrono no bloqueante (`async`/`await`).
+  Gracias al servidor Kestrel, la optimización de memoria con `Span<T>` / `Memory<T>` y el modelo de concurrencia asíncrona (`async`/`await`), .NET permite procesar miles de mensajes por segundo con un consumo de recursos muy reducido.
 
-* 🧩 **Soporte Nativo de Clean Architecture e Inyección de Dependencias:**
-  El contenedor de dependencias (*IoC*) nativo de .NET simplifica el desacoplamiento de capas, promoviendo un diseño basado en principios SOLID, testeabilidad mediante pruebas unitarias e integración de patrones como CQRS y Repository.
+* 🧩 **Clean Architecture e Inyección de Dependencias:**
+  Facilita el desacoplamiento de componentes, promueve principios SOLID, permite realizar pruebas unitarias sobre casos de uso sin depender del servidor web o la base de datos, e integra patrones como CQRS y Repository.
 
-* 🐳 **Excelente Soporte para Contenerización (Docker):**
-  Las imágenes base de .NET Runtime en Linux son altamente optimizadas (versiones *chiseled* o *alpine*), lo que garantiza despliegues ligeros, arranque rápido en contenedores y compatibilidad nativa con orquestadores como Kubernetes o Azure Container Apps.
+* 🐳 **Preparado para Contenerización (Docker):**
+  Despliegue ágil en contenedores Linux optimizados, facilitando la integración continua (CI/CD) y la orquestación en plataformas como Kubernetes, Docker Swarm o servicios en la nube (AWS, Azure, GCP).
 
 ---
 
 ## 3. Arquitectura del Sistema (Clean Architecture)
 
-El proyecto está estructurado siguiendo las directrices de **Clean Architecture** (Arquitectura Limpia), separando responsabilidades en 4 capas concéntricas donde las dependencias fluyen estrictamente hacia el interior (**Domain** no conoce a ninguna otra capa).
+El proyecto adopta **Clean Architecture** (Arquitectura Limpia), organizando el código en 4 capas concéntricas donde la capa de **Dominio** actúa como el núcleo independiente sin referencias externas.
 
 ### Diagrama de Capas (Mermaid)
 
 ```mermaid
 graph TD
     subgraph Presentación / Red
-        WebApi["SenaVirtual.WebApi<br/>(Controllers, SignalR Hubs, Middlewares, OpenAPI)"]
+        WebApi["WebApi Layer<br/>(Controllers, SignalR Hubs, Middlewares, OpenAPI)"]
     end
 
     subgraph Aplicación / Casos de Uso
-        Application["SenaVirtual.Application<br/>(Use Cases, Commands/Queries, DTOs, Interfaces)"]
+        Application["Application Layer<br/>(Use Cases, Commands/Queries, DTOs, Interfaces)"]
     end
 
     subgraph Infraestructura / Persistencia
-        Infrastructure["SenaVirtual.Infrastructure<br/>(EF Core, SQL/PostgreSQL, Redis Backplane, Identity)"]
+        Infrastructure["Infrastructure Layer<br/>(EF Core, SQL/PostgreSQL, Redis Backplane, Auth)"]
     end
 
     subgraph Dominio / Corazón
-        Domain["SenaVirtual.Domain<br/>(Entities, Value Objects, Domain Events, Enums)"]
+        Domain["Domain Layer<br/>(Entities, Value Objects, Domain Events, Enums)"]
     end
 
     %% Relaciones de dependencia
@@ -78,23 +78,19 @@ graph TD
     style WebApi fill:#4a2e5d,stroke:#333,stroke-width:2px,color:#fff
 ```
 
-### Responsabilidad de Cada Capa
+### Responsabilidad de las Capas
 
-1. 🟢 **`SenaVirtual.Domain` (Capa de Dominio):**
-   * Es el núcleo del sistema y no posee dependencias externas ni referencias a otros proyectos o librerías de infraestructura.
-   * Contiene las entidades puras del negocio (`User`, `Room`, `InteractiveNode`, `ChatLog`), reglas de validación de dominio, objetos de valor y eventos de dominio.
+1. 🟢 **`Domain` (Capa de Dominio):**
+   * Núcleo del sistema sin dependencias externas. Contiene entidades puras (`Player`, `Room`, `InteractiveNode`, `ChatLog`), reglas del mundo virtual y objetos de valor.
 
-2. 🔵 **`SenaVirtual.Application` (Capa de Aplicación):**
-   * Orquesta la lógica de negocio y los casos de uso (ej. `JoinRoomUseCase`, `MoveAvatarCommand`, `SendSpatialChatMessage`).
-   * Define las interfaces de servicios (repositorios, bus de eventos, notificaciones de SignalR), DTOs y mapeos.
+2. 🔵 **`Application` (Capa de Aplicación):**
+   * Orquesta los casos de uso del juego (ej. `JoinRoomUseCase`, `MovePlayerCommand`, `SendSpatialChatMessage`). Define interfaces para repositorios, notificaciones en tiempo real y DTOs.
 
-3. 🟤 **`SenaVirtual.Infrastructure` (Capa de Infraestructura):**
-   * Implementa las interfaces definidas en la capa de Aplicación.
-   * Gestiona el acceso a datos mediante Entity Framework Core, la persistencia en base de datos relacional, la integración con Redis para el escalado del chat/movimiento y servicios de autenticación/JWT.
+3. 🟤 **`Infrastructure` (Capa de Infraestructura):**
+   * Implementa la persistencia de datos (Entity Framework Core con PostgreSQL o SQL Server), la distribución de estado con Redis y los servicios de autenticación/JWT.
 
-4. 🟣 **`SenaVirtual.WebApi` (Capa de Presentación / API):**
-   * Punto de entrada de la aplicación HTTP y WebSockets.
-   * Contiene los controladores RESTful, los *SignalR Hubs* (`GameHub`, `ChatHub`), middlewares de manejo de excepciones, configuración de CORS y canal de autenticación JWT.
+4. 🟣 **`WebApi` (Capa de Presentación / API):**
+   * Expone los puntos de entrada HTTP RESTful y los *SignalR Hubs* de tiempo real (`GameHub`, `ChatHub`), gestionando la seguridad, CORS y middlewares.
 
 ---
 
@@ -102,74 +98,70 @@ graph TD
 
 ### Requisitos Funcionales (RF)
 
-* 🔐 **RF-01: Autenticación y Gestión de Roles**
-  * El sistema debe permitir el inicio de sesión y validación de usuarios (Aprendiz, Instructor, Administrador) mediante tokens JWT.
-* 📍 **RF-02: Presencia y Movimiento 2D en Tiempo Real**
-  * El servidor debe recibir y difundir las coordenadas bidimensionales $(X, Y)$, dirección del avatar y estado de animación a los usuarios presentes en la misma sala con una frecuencia de refresco alta.
-* 💬 **RF-03: Chat Espacial y Global**
-  * **Chat Espacial (Proximidad):** Los mensajes solo deben enviarse a usuarios dentro de un radio $R$ configurable de distancia euclidiana respecto al emisor.
-  * **Chat Global:** Los mensajes de canal son difundidos a todos los integrantes conectados a una sala específica.
-* 🧩 **RF-04: Interacción con Nodos Educativos**
-  * El backend debe gestionar el estado y la ejecución de acciones sobre nodos interactivos situados en el mapa (abrir PDF, activar transmisión de video, abrir enlaces o iniciar quizzes).
-* 🏫 **RF-05: Gestión de Ambientes y Aulas Virtuales**
-  * Instructores y administradores pueden crear, configurar, activar y delimitar el aforo máximo de salas/ambientes de formación.
+* 🔐 **RF-01: Autenticación y Control de Acceso**
+  * Validación e inicio de sesión de jugadores mediante JWT, asignando roles (`Player`, `Admin`, `Moderator`).
+* 📍 **RF-02: Movimiento y Presencia 2D en Tiempo Real**
+  * Recepción y retransmisión de posiciones $(X, Y)$, orientación del avatar y animación entre jugadores conectados a la misma sala o mapa.
+* 💬 **RF-03: Sistema de Chat Espacial (Proximidad) y Global**
+  * **Chat Espacial:** Distribución de mensajes basada en distancia euclidiana respecto al emisor ($R$ configurable).
+  * **Chat Global:** Canal de mensajería para toda la sala o mapa activo.
+* 🧩 **RF-04: Nodos y Objetos Interactivos del Mapa**
+  * Sincronización de estado e interacción con objetos 2D del escenario (puertas, cofres, reproductores de medios, enlaces externos, triggers de eventos).
+* 🗺️ **RF-05: Gestión de Salas e Instancias de Juego**
+  * Creación, configuración y control de aforo para salas de juego, mapas o zonas virtuales.
 
 ### Requisitos No Funcionales (RNF)
 
-* ⚡ **RNF-01: Rendimiento y Baja Latencia**
-  * La latencia de distribución de movimiento en WebSockets debe mantenerse por debajo de los $50\text{ ms}$ en condiciones normales de red.
-* 🧱 **RNF-02: Modularidad y Extensibilidad (Plugin-Ready)**
-  * La arquitectura debe permitir agregar nuevos tipos de nodos interactivos o mecánicas pedagógicas sin modificar el núcleo del dominio ni alterar contratos existentes.
-* 🐳 **RNF-03: Contenerización y Escalabilidad Horizontal**
-  * El sistema debe empaquetarse en contenedores Docker y soportar balanceo de carga mediante Redis Backplane para sincronizar múltiples instancias de SignalR.
-* 🛡️ **RNF-04: Seguridad y Trazabilidad**
-  * Todas las comunicaciones de tiempo real y REST deben estar cifradas mediante TLS/WSS y contar con auditoría de acciones administrativas y chats.
+* ⚡ **RNF-01: Latencia y Rendimiento**
+  * Latencia de sincronización de movimiento $< 50\text{ ms}$ en condiciones normales de red.
+* 🧱 **RNF-02: Extensibilidad (Plugin-Ready)**
+  * Diseño basado en eventos que permite añadir nuevas mecánicas de juego sin modificar el código core del dominio.
+* 🐳 **RNF-03: Contenerización y Escalado Horizontal**
+  * Despliegue en Docker y soporte de escalado multi-instancia mediante Redis Backplane para SignalR.
+* 🛡️ **RNF-04: Seguridad en Comunicaciones**
+  * Cifrado en tránsito (TLS/WSS) y validación de tokens en cada handshake de WebSocket.
 
 ---
 
 ## 5. Modelo de Datos y Extensiones
 
-El modelo de datos relacional se complementa con campos JSON flexibles para garantizar alta extensibilidad sin requerir cambios continuos en la estructura de tablas.
+El modelo relacional combina tipos estricto para entidades clave con metadatos en formato JSON para permitir la máxima flexibilidad por juego.
 
 ### Entidades Principales
 
 | Entidad | Descripción | Campos Clave | Uso de `MetadataJson` |
 | :--- | :--- | :--- | :--- |
-| **`User`** | Representa los actores del sistema (aprendices e instructores). | `Id`, `DocumentNumber`, `FullName`, `Email`, `Role`, `AvatarConfig` | Almacena configuraciones dinámicas de personalización del avatar (skin, ropa, accesorios, colores y animaciones personalizadas). |
-| **`Room`** | Define las aulas, auditorios o ambientes virtuales 2D. | `Id`, `Name`, `Code`, `Capacity`, `MapAssetUrl`, `IsActive` | Contiene metadatos de configuración del mapa (límites del plano, zonas de colisión, puntos de aparición/spawn, zonas de audio y capas). |
-| **`InteractiveNode`** | Elementos u objetos dentro del mapa con los que se puede interactuar. | `Id`, `RoomId`, `PositionX`, `PositionY`, `NodeType`, `InteractionRadius` | Guarda la carga útil dinámica del nodo (URL del PDF, ID de reunión externa, parámetros de evaluación, estado del tablero). |
-| **`ChatLog`** | Registro histórico de mensajes transmitidos en la plataforma. | `Id`, `RoomId`, `SenderId`, `Content`, `MessageType`, `Timestamp` | Almacena atributos contextuales del mensaje (coordenadas $X,Y$ de envío para auditoría de chat espacial, adjuntos o formato rico). |
+| **`Player`** | Jugadores o usuarios en el juego. | `Id`, `Username`, `Role`, `PositionX`, `PositionY`, `Direction`, `CurrentRoomId` | Almacena skins, accesorios, estadísticas de juego o atributos personalizados sin modificar la tabla. |
+| **`Room`** | Salas, mapas 2D o instancias del mundo. | `Id`, `Name`, `Capacity`, `MapAssetUrl`, `IsActive` | Almacena configuraciones del mapa (límites $X,Y$, zonas de colisión, spawns y capas). |
+| **`InteractiveNode`** | Objetos interactivos posicionados en el mapa. | `Id`, `RoomId`, `PositionX`, `PositionY`, `Type` | Define la carga útil del objeto (ej. URLs, diálogos, recompensas, configuraciones custom). |
+| **`ChatLog`** | Historial de mensajes en el sistema. | `Id`, `RoomId`, `SenderId`, `Content`, `MessageType`, `Timestamp` | Guarda metadatos adicionales (ej. coordenadas de envío para auditoría de proximidad). |
 
-### El Rol de `MetadataJson` para la Extensibilidad del SENA
+### La Ventaja de `MetadataJson` para Juegos en Unity
 
-En un entorno educativo en constante evolución como el SENA, los requerimientos de interacción cambian con frecuencia (ej. nuevos tipos de guías, herramientas de realidad aumentada o integración con plataformas externas).
-
-El uso estratégica del campo **`MetadataJson`** (representado como columna JSONB/JSON nativa en PostgreSQL o SQL Server) permite:
-1. **Evitar Migraciones Frecuentes:** Incorporar propiedades personalizadas a un nodo interactivo o avatar sin ejecutar migraciones de base de datos ni alterar esquemas relacionales.
-2. **Patrón de Extensión por Tipo:** Permitir que diferentes tipos de nodos (`NodeType.PdfViewer`, `NodeType.ExternalLink`, `NodeType.QuizBoard`) almacenen estructuras de datos completamente distintas manteniendo una única entidad `InteractiveNode`.
-3. **Deserialización fuertemente tipada en C#:** La capa de infraestructura deserializa dinámicamente este campo a objetos C# específicos según el tipo de nodo en tiempo de ejecución.
+Cada juego en Unity requiere propiedades distintas para sus personajes u objetos del escenario. El campo **`MetadataJson`** en la base de datos permite:
+1. **Evitar Migraciones continuas:** Agregar atributos dinámicos a un personaje u objeto sin ejecutar migraciones SQL.
+2. **Sincronización Transparente con C# en Unity:** El backend y el cliente Unity deserializan directamente el objeto JSON a clases de C# específicas del juego.
 
 ---
 
-## 6. Instrucciones de Instalación y Ejecución Local
+## 6. Instalación y Ejecución Local
 
 ### Prerrequisitos
-* [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) (o versión indicada en la solución)
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+* [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Opcional para servicios)
 * [Git](https://git-scm.com/)
-* Cliente de Base de Datos (PostgreSQL / SQL Server) y Redis (Opcional si se ejecuta vía Docker).
 
 ---
 
-### Opción A: Ejecución mediante la CLI de .NET
+### Opción A: Ejecución Local con .NET CLI
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/tu-organizacion/SenaVirtualBackend.git
-   cd SenaVirtualBackend
+   git clone https://github.com/tu-usuario/nombre-repositorio.git
+   cd nombre-repositorio
    ```
 
-2. **Restaurar las dependencias del proyecto:**
+2. **Restaurar dependencias:**
    ```bash
    dotnet restore
    ```
@@ -179,99 +171,68 @@ El uso estratégica del campo **`MetadataJson`** (representado como columna JSON
    dotnet build --configuration Debug
    ```
 
-4. **Ejecutar migraciones de Base de Datos (Entity Framework Core):**
-   ```bash
-   dotnet ef database update --project src/SenaVirtual.Infrastructure --startup-project src/SenaVirtual.WebApi
-   ```
-
-5. **Iniciar la WebAPI y Gateway de SignalR:**
+4. **Ejecutar el servidor WebAPI / WebSockets:**
    ```bash
    dotnet run --project src/SenaVirtual.WebApi
    ```
-   *La API estará disponible en `https://localhost:7150` o `http://localhost:5240` (revisar la consola o `launchSettings.json`).*
 
 ---
 
-### Opción B: Ejecución mediante Docker Compose 🐳
+### Opción B: Ejecución con Docker Compose 🐳
 
-Para levantar el entorno completo (Backend API, Base de Datos PostgreSQL y Servidor Redis para el Backplane de SignalR):
+Levanta el servidor WebAPI junto con PostgreSQL y Redis de forma inmediata:
 
-1. **Construir e iniciar los contenedores:**
-   ```bash
-   docker-compose up -d --build
-   ```
+```bash
+docker-compose up -d --build
+```
 
-2. **Verificar el estado de los servicios:**
-   ```bash
-   docker-compose ps
-   ```
-
-3. **Ver los registros en tiempo real:**
-   ```bash
-   docker-compose logs -f webapi
-   ```
-
-4. **Detener el entorno:**
-   ```bash
-   docker-compose down
-   ```
+Para detener los servicios:
+```bash
+docker-compose down
+```
 
 ---
 
-## 7. Estándares para Contribuir y Arquitectura Plugin-Ready
+## 7. Extensibilidad y Mecánicas de Juego (Plugin Architecture)
 
-El proyecto adopta un enfoque **Plugin-Ready** respaldado por la inversión de dependencias y el patrón de Bus de Eventos. Aprendices e instructores que deseen contribuir pueden agregar nuevas funcionalidades o tipos de interacción siguiendo estas directrices.
-
-### Cómo agregar un Nuevo Nodo Interactivo (Guía Paso a Paso)
+La plantilla implementa un patrón **Plugin-Ready** mediante un Bus de Eventos orientados a interacción, permitiendo implementar mecánicas específicas para tu juego en Unity:
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Client as Cliente Unity 2D
-    participant WebApi as WebApi (SignalR Hub)
+    participant UnityClient as Cliente Unity 2D
+    participant WebApi as WebSockets (SignalR Hub)
     participant App as Application (Event Bus)
-    participant Handler as Plugin Handler (Nuevo Módulo)
+    participant Plugin as Game Mechanics Handler
 
-    Client->>WebApi: InteractWithNode(nodeId, metadata)
+    UnityClient->>WebApi: InteractWithNode(nodeId, metadata)
     WebApi->>App: Publish(NodeInteractionEvent)
-    App->>Handler: HandleAsync(NodeInteractionEvent)
-    Handler-->>WebApi: ResultPayload / Broadcast
-    WebApi-->>Client: ReceiveNodeAction(actionData)
+    App->>Plugin: HandleAsync(NodeInteractionEvent)
+    Plugin-->>WebApi: ResultPayload / Broadcast
+    WebApi-->>UnityClient: OnNodeStateChanged(payload)
 ```
 
-1. **Paso 1: Definir el Evento/Comando en `SenaVirtual.Application`**
-   Cree el contrato de la interacción implementando la interfaz de evento del sistema:
+### Implementar una Nueva Mecánica
+
+1. **Definir el Evento:**
    ```csharp
-   public record CustomQuizInteractionEvent(Guid UserId, Guid NodeId, string Answer) : INodeInteractionEvent;
+   public record CustomItemInteractEvent(Guid PlayerId, Guid NodeId, string Action) : INodeInteractionEvent;
    ```
 
-2. **Paso 2: Crear el Manejador del Plugin (`Handler`)**
-   En la capa correspondiente o en un módulo independiente, implemente el manejador de la lógica:
+2. **Crear el Handler:**
    ```csharp
-   public class CustomQuizInteractionHandler : INodeInteractionHandler<CustomQuizInteractionEvent>
+   public class CustomItemInteractHandler : INodeInteractionHandler<CustomItemInteractEvent>
    {
-       public async Task HandleAsync(CustomQuizInteractionEvent notification, CancellationToken cancellationToken)
+       public async Task HandleAsync(CustomItemInteractEvent notification, CancellationToken cancellationToken)
        {
-           // Lógica personalizada (ej. validar respuesta, calcular puntaje)
+           // Lógica de juego personalizada
        }
    }
    ```
 
-3. **Paso 3: Registrar el Plugin en la Inyección de Dependencias**
-   Extienda los servicios de aplicación utilizando el método de extensión correspondiente:
-   ```csharp
-   services.AddNodeInteractionPlugin<CustomQuizInteractionHandler>();
-   ```
-
-### Reglas de Contribución para Aprendices e Instructores
-* 🛑 **Respetar los Límites de Capas:** Queda estrictamente prohibido añadir referencias de librerías de infraestructura en `SenaVirtual.Domain`.
-* 🧪 **Pruebas Unitarias:** Todo nuevo caso de uso o manejador de nodo interactivo debe incluir sus correspondientes pruebas unitarias en el proyecto de pruebas.
-* 📝 **Commits Convencionales:** Utilizar el formato standard para commits (`feat:`, `fix:`, `docs:`, `refactor:`).
-* 🔀 **Pull Requests:** Toda contribución debe realizarse mediante una rama descriptiva (`feature/nombre-funcionalidad` o `fix/descripcion-bug`) y solicitar revisión al equipo de arquitectura.
-
 ---
 
 <p align="center">
-  <b>SENA Virtual 2D Backend</b> • Servicio Nacional de Aprendizaje (SENA) <br/>
-  <i>Transformando la educación virtual con tecnología inmersiva de alto rendimiento.</i>
+  <b>Unity 2D Multiplayer .NET Backend Template</b><br/>
+  <i>Base sólida de arquitectura limpia para el desarrollo de juegos multijugador 2D en Unity.</i>
 </p>
