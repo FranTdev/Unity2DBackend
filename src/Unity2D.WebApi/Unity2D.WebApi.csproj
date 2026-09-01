@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SenaVirtual.Infrastructure\SenaVirtual.Infrastructure.csproj" />
-    <ProjectReference Include="..\SenaVirtual.Application\SenaVirtual.Application.csproj" />
+    <ProjectReference Include="..\Unity2D.Infrastructure\Unity2D.Infrastructure.csproj" />
+    <ProjectReference Include="..\Unity2D.Application\Unity2D.Application.csproj" />
   </ItemGroup>
 
 </Project>

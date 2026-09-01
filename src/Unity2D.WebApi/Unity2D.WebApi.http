@@ -1,0 +1,6 @@
+@Unity2D.WebApi_HostAddress = http://localhost:5095
+
+GET {{Unity2D.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,6 +1,0 @@
-@SenaVirtual.WebApi_HostAddress = http://localhost:5095
-
-GET {{SenaVirtual.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

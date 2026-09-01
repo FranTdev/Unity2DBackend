@@ -173,7 +173,7 @@ Cada juego en Unity requiere propiedades distintas para sus personajes u objetos
 
 4. **Ejecutar el servidor WebAPI / WebSockets:**
    ```bash
-   dotnet run --project src/SenaVirtual.WebApi
+   dotnet run --project src/Unity2D.WebApi
    ```
 
 ---

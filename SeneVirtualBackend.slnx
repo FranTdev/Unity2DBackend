@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/SenaVirtual.Application/SenaVirtual.Application.csproj" />
-    <Project Path="src/SenaVirtual.Domain/SenaVirtual.Domain.csproj" />
-    <Project Path="src/SenaVirtual.Infrastructure/SenaVirtual.Infrastructure.csproj" />
-    <Project Path="src/SenaVirtual.WebApi/SenaVirtual.WebApi.csproj" />
-  </Folder>
-</Solution>

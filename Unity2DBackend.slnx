@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Unity2D.Application/Unity2D.Application.csproj" />
+    <Project Path="src/Unity2D.Domain/Unity2D.Domain.csproj" />
+    <Project Path="src/Unity2D.Infrastructure/Unity2D.Infrastructure.csproj" />
+    <Project Path="src/Unity2D.WebApi/Unity2D.WebApi.csproj" />
+  </Folder>
+</Solution>

@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\SenaVirtual.Domain\SenaVirtual.Domain.csproj" />
+    <ProjectReference Include="..\Unity2D.Domain\Unity2D.Domain.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

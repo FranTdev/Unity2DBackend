@@ -1,4 +1,4 @@
-namespace SenaVirtual.Domain.Entities;
+namespace Unity2D.Domain.Entities;
 
 public class InteractiveNode 
 {

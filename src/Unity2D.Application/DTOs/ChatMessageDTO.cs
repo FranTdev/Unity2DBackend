@@ -1,4 +1,4 @@
-namespace SenaVirtual.Application.DTOs;
+namespace Unity2D.Application.DTOs;
 
 public class ChatMessageDto
 {
