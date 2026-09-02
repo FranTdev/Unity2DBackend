@@ -30,6 +30,10 @@ appsettings.Development.json
 appsettings.Local.json
 *.local.json
 
+# SignalR Unity Build temp and generated output
+SignalRUnityBuild/
+SignalR_Unity_Libs/
+
 # Local developer guide / change log (Ignored by Git)
 GUIA_CAMBIOS_PLANTILLA.md
 TEMPLATE_GENERALIZATION_GUIDE.md

@@ -136,12 +136,6 @@ El modelo relacional combina tipos estricto para entidades clave con metadatos e
 | **`InteractiveNode`** | Objetos interactivos posicionados en el mapa. | `Id`, `RoomId`, `PositionX`, `PositionY`, `Type` | Define la carga útil del objeto (ej. URLs, diálogos, recompensas, configuraciones custom). |
 | **`ChatLog`** | Historial de mensajes en el sistema. | `Id`, `RoomId`, `SenderId`, `Content`, `MessageType`, `Timestamp` | Guarda metadatos adicionales (ej. coordenadas de envío para auditoría de proximidad). |
 
-### La Ventaja de `MetadataJson` para Juegos en Unity
-
-Cada juego en Unity requiere propiedades distintas para sus personajes u objetos del escenario. El campo **`MetadataJson`** en la base de datos permite:
-1. **Evitar Migraciones continuas:** Agregar atributos dinámicos a un personaje u objeto sin ejecutar migraciones SQL.
-2. **Sincronización Transparente con C# en Unity:** El backend y el cliente Unity deserializan directamente el objeto JSON a clases de C# específicas del juego.
-
 ---
 
 ## 6. Instalación y Ejecución Local
@@ -212,87 +206,42 @@ sequenceDiagram
     WebApi-->>UnityClient: OnNodeStateChanged(payload)
 ```
 
-### Implementar una Nueva Mecánica
+---
 
-1. **Definir el Evento:**
-   ```csharp
-   public record CustomItemInteractEvent(Guid PlayerId, Guid NodeId, string Action) : INodeInteractionEvent;
-   ```
+## 8. Integración del Cliente SignalR en Unity (.NET Standard 2.1) ⚡
 
-2. **Crear el Handler:**
-   ```csharp
-   public class CustomItemInteractHandler : INodeInteractionHandler<CustomItemInteractEvent>
-   {
-       public async Task HandleAsync(CustomItemInteractEvent notification, CancellationToken cancellationToken)
-       {
-           // Lógica de juego personalizada
-       }
-   }
-   ```
+> [!NOTE]
+> **¿Por qué este proceso?**
+> El servidor backend utiliza ejecutables de alto rendimiento de .NET moderno (.NET 9 / .NET 10), mientras que Unity opera sobre el runtime **.NET Standard 2.1 (Mono / IL2CPP)**. Para evitar incompatibilidades de runtime o depender de paquetes de terceros no oficiales, extraemos de forma automatizada las DLLs oficiales de Microsoft `Microsoft.AspNetCore.SignalR.Client` (v8.0.11) compiladas explícitamente en perfil `netstandard2.1`.
 
 ---
 
-## 8. Guía de Extracción e Integración de SignalR en Unity (.NET Standard 2.1) 📖
+### 🚀 Integración Rápida en 3 Pasos
 
-Esta sección detalla el procedimiento profesional para compilar y extraer las dependencias DLL oficiales de **`Microsoft.AspNetCore.SignalR.Client`** compatibles con la arquitectura de **Unity** (Mono / .NET Standard 2.1), evitando el uso de herramientas de terceros o paquetes no oficiales de NuGet en la interfaz de Unity.
+```text
+[ 1. Ejecutar Script ]  ──►  [ 2. Arrastrar a Unity ]  ──►  [ 3. Ajustar Duplicados ]
+ (build-signalr-unity)        (Assets/Plugins/)             (System.Text.Json.dll)
+```
+
+#### 1️⃣ Paso 1: Ejecutar el Script de Automatización
+Ejecuta con un solo clic el script correspondiente a tu sistema operativo desde la carpeta `scripts/`:
+
+* **Windows:**
+  ```cmd
+  scripts\build-signalr-unity.bat
+  ```
+* **Linux / macOS:**
+  ```bash
+  chmod +x scripts/build-signalr-unity.sh
+  ./scripts/build-signalr-unity.sh
+  ```
+
+*El script creará automáticamente la carpeta `SignalR_Unity_Libs/` con las 30 DLLs oficiales preparadas y eliminará el proyecto temporal.*
 
 ---
 
-### 📋 Prerrequisitos
-
-1. **SDK de .NET** instalado en el sistema (`.NET 8`, `.NET 9` o `.NET 10`).
-2. **Unity** (versión 2021.3 LTS o superior, configurada en `Api Compatibility Level: .NET Standard 2.1`).
-
----
-
-### 🛠️ Procedimiento de Extracción de DLLs
-
-Para evitar incompatibilidades con ejecutables modernos de .NET (como .NET 10) dentro de Unity, el paquete cliente se debe compilar como una biblioteca de clases (*Class Library*) forzada explícitamente a **`netstandard2.1`**.
-
-#### Paso 1: Abrir la terminal
-Navega en tu consola a la ruta `Assets/Plugins/` de tu proyecto de Unity o a cualquier ubicación temporal:
-
-```cmd
-cd C:\RutaDeTuProyecto\Assets\Plugins
-```
-
-#### Paso 2: Crear el proyecto puente con target `netstandard2.1`
-Ejecuta el siguiente comando para generar una biblioteca de clases configurada específicamente para el perfil de compatibilidad de Unity:
-
-```cmd
-dotnet new classlib -n SignalRUnityBuild -f netstandard2.1
-```
-
-#### Paso 3: Agregar el paquete oficial de SignalR
-Ingresa a la carpeta creada e instala la versión compatible del cliente de SignalR:
-
-```cmd
-cd SignalRUnityBuild
-dotnet add package Microsoft.AspNetCore.SignalR.Client --version 8.0.11
-```
-
-> **Nota:** La versión `8.0.11` garantiza estabilidad total con las especificaciones de `.NET Standard 2.1`.
-
-#### Paso 4: Compilar y exportar las DLLs consolidadas
-Publica el proyecto en modo `Release` para que el SDK reúna la DLL principal y todas sus dependencias auxiliares (`System.Text.Json`, `Microsoft.AspNetCore.Connections.Abstractions`, etc.) en una sola carpeta de salida:
-
-```cmd
-dotnet publish -c Release -o ..\SignalR_Unity_Libs
-```
-
-#### Paso 5: Limpieza de archivos temporales
-Regresa al directorio padre y elimina el proyecto puente de código fuente, dejando únicamente la carpeta compilada de binarios `SignalR_Unity_Libs`:
-
-```cmd
-cd ..
-rmdir /s /q SignalRUnityBuild
-```
-
----
-
-### 📂 Estructura de Directorios Resultante en Unity
-
-Dentro de tu proyecto de Unity, la carpeta `Assets/` debe quedar organizada de la siguiente manera:
+#### 2️⃣ Paso 2: Importar DLLs en Unity
+Copia o arrastra la carpeta generada `SignalR_Unity_Libs/` a la ruta `Assets/Plugins/` dentro de tu proyecto de Unity:
 
 ```text
 Assets/
@@ -301,33 +250,49 @@ Assets/
         ├── Microsoft.AspNetCore.SignalR.Client.dll
         ├── Microsoft.AspNetCore.SignalR.Client.Core.dll
         ├── Microsoft.AspNetCore.Connections.Abstractions.dll
-        ├── Microsoft.AspNetCore.Http.Connections.Client.dll
-        ├── Microsoft.AspNetCore.Http.Connections.Common.dll
         ├── System.Text.Json.dll
-        └── (demás DLLs de soporte...)
+        └── (resto de DLLs de soporte...)
 ```
 
 ---
 
-### ⚡ Verificación Final en Unity
+#### 3️⃣ Paso 3: Resolver Conflicto de Duplicidad (si aplica)
+Si Unity muestra un aviso/error referente a DLL duplicada (ej. `System.Text.Json.dll` ya incluida por UPM):
 
-1. Vuelve al Editor de Unity y deja que reimporte los activos.
-2. Asegúrate de que los scripts que consumen el cliente incluyan la directiva de compilación:
-   ```csharp
-   using Microsoft.AspNetCore.SignalR.Client;
-   ```
-3. Revisa la ventana **Console** de Unity: no deben aparecer errores rojos de tipo *Unable to resolve reference* o de espacios de nombres faltantes.
+1. Abre en Unity la carpeta `Assets/Plugins/SignalR_Unity_Libs/`.
+2. Selecciona la DLL duplicada (ej. `System.Text.Json.dll`).
+3. En el panel **Inspector** (a la derecha), desmarca la casilla **Any Platform**.
+4. Haz clic en **Apply**.
 
 ---
 
-### 💡 Solución de Problemas Comunes (*Troubleshooting*)
+#### 🎮 Consumo desde C# en Unity
 
-* **Error de Duplicidad (`System.Text.Json` o bibliotecas del sistema):**
-  Si Unity indica un conflicto porque un paquete interno de UPM ya incluye `System.Text.Json.dll`:
-  1. Ve a `Assets/Plugins/SignalR_Unity_Libs/`.
-  2. Selecciona la DLL duplicada que marca el error.
-  3. En el panel **Inspector** de la derecha, desmarca la casilla **Any Platform** (o la casilla del Editor).
-  4. Haz clic en **Apply**.
+En tus scripts de Unity ya puedes consumir la librería cliente oficial directamente:
+
+```csharp
+using Microsoft.AspNetCore.SignalR.Client;
+
+public class NetworkManager : MonoBehaviour
+{
+    private HubConnection _connection;
+
+    async void Start()
+    {
+        _connection = new HubConnectionBuilder()
+            .WithUrl("http://localhost:5240/hubs/game")
+            .WithAutomaticReconnect()
+            .Build();
+
+        _connection.On<PlayerMovementDto>("OnPlayerMoved", (movement) => {
+            Debug.Log($"Jugador movido: {movement.PlayerId} a ({movement.PositionX}, {movement.PositionY})");
+        });
+
+        await _connection.StartAsync();
+        Debug.Log("¡Conectado exitosamente al servidor SignalR desde Unity!");
+    }
+}
+```
 
 ---
 
