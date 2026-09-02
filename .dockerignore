@@ -1,0 +1,22 @@
+# Visual Studio / IDE temp files
+.vs/
+.idea/
+.vscode/
+
+# Build artifacts
+**/bin/
+**/obj/
+out/
+logs/
+*.log
+
+# Git & documentation
+.git/
+.gitignore
+*.md
+GUIA_CAMBIOS_PLANTILLA.md
+
+# Scripts & temporary libs
+scripts/
+SignalRUnityBuild/
+SignalR_Unity_Libs/

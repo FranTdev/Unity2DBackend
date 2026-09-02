@@ -1,0 +1,65 @@
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: unity2d-backend-webapi
+    restart: always
+    ports:
+      - "5240:5240"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5240
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=unity2d_db;Username=app_user;Password=app_password
+      - ConnectionStrings__Redis=redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - unity2d-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: unity2d-backend-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: unity2d_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d unity2d_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - unity2d-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: unity2d-backend-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - unity2d-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  unity2d-network:
+    driver: bridge
