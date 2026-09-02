@@ -31,6 +31,8 @@ appsettings.Local.json
 *.local.json
 
 # SignalR Unity Build temp and generated output
+**/SignalRUnityBuild/
+**/SignalR_Unity_Libs/
 SignalRUnityBuild/
 SignalR_Unity_Libs/
 

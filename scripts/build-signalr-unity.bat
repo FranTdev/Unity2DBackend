@@ -5,6 +5,10 @@ echo ====================================================================
 echo Extractor de Librerias Cliente de SignalR para Unity (.NET Standard 2.1)
 echo ====================================================================
 
+:: Obtener la ruta del directorio del script (carpeta scripts)
+set "SCRIPT_DIR=%~dp0"
+cd /d "%SCRIPT_DIR%"
+
 :: 1. Eliminar residuos anteriores si existen
 if exist "SignalRUnityBuild" rmdir /s /q "SignalRUnityBuild"
 if exist "SignalR_Unity_Libs" rmdir /s /q "SignalR_Unity_Libs"
@@ -30,7 +34,7 @@ if %errorlevel% neq 0 (
     exit /b %errorlevel%
 )
 
-:: 4. Compilar y publicar DLLs consolidadas
+:: 4. Compilar y publicar DLLs consolidadas en scripts/SignalR_Unity_Libs
 echo [3/4] Compilando y publicando DLLs consolidadas en modo Release...
 dotnet publish -c Release -o ..\SignalR_Unity_Libs > nul
 if %errorlevel% neq 0 (
@@ -48,6 +52,6 @@ rmdir /s /q "SignalRUnityBuild"
 
 echo ====================================================================
 echo [EXITO] PROCESO COMPLETADO SATISFACTORIAMENTE
-echo Carpeta generada: SignalR_Unity_Libs
-echo Copia o arrastra la carpeta 'SignalR_Unity_Libs' a 'Assets/Plugins/' en Unity.
+echo Carpeta generada: scripts\SignalR_Unity_Libs
+echo Copia o arrastra la carpeta 'SignalR_Unity_Libs' a 'Assets/Plugins/' en tu proyecto de Unity.
 echo ====================================================================
