@@ -1,41 +1,39 @@
+using Unity2D.WebApi.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// A. Registrar servicios en el contenedor de Inyección de Dependencias
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddSignalR(); // Habilita el motor de SignalR para WebSockets
+
+// Configurar CORS para permitir que clientes Unity (incluyendo compilaciones WebGL o editor) se conecten
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowUnityClient", policy =>
+    {
+        policy.SetIsOriginAllowed(_ => true) // En desarrollo, permite cualquier origen
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Requisito clave para WebSockets / SignalR
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// B. Configurar el Pipeline de Middlewares
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowUnityClient");
+app.UseRouting();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Mapear el endpoint del Hub de SignalR (URL a la que se conecta el cliente Unity: /hubs/game)
+app.MapHub<GameHub>("/hubs/game");
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
