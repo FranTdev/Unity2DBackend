@@ -1,6 +1,6 @@
 # Guía de Extracción de Librerías e Integración de SignalR en Unity 🎮
 
-Esta carpeta contiene los scripts de automatización y los componentes cliente de C# listos para conectar cualquier proyecto de **Unity 2D** con el backend en **.NET Core**.
+Esta carpeta contiene los scripts de automatización y los componentes cliente de C# optimizados para **Unity 6 (6.3 LTS)** listos para conectar con el backend en **.NET Core**.
 
 ---
 

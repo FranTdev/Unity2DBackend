@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/SignalR-Realtime-blue?style=for-the-badge&logo=aspnet" alt="SignalR" />
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/Architecture-Clean_Architecture-brightgreen?style=for-the-badge" alt="Clean Architecture" />
-  <img src="https://img.shields.io/badge/Unity-2021.3%2B-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity" />
+  <img src="https://img.shields.io/badge/Unity-6%20(6.3%20LTS)-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity 6.3 LTS" />
 </p>
 
 ---
