@@ -31,9 +31,36 @@ app.UseHttpsRedirection();
 app.UseCors("AllowUnityClient");
 app.UseRouting();
 
-// Mapear el endpoint del Hub de SignalR (URL a la que se conecta el cliente Unity: /hubs/game)
+// C. Endpoints de Señal e Indicadores de Estado (Health Check / Server Signal)
+app.MapGet("/", () => Results.Ok(new
+{
+    status = "Online",
+    service = "Unity 2D Multiplayer .NET Backend",
+    version = "1.0.0",
+    signalRHub = "/hubs/game",
+    environment = app.Environment.EnvironmentName,
+    timestamp = DateTime.UtcNow
+})).WithName("GetServerStatus");
+
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = DateTime.UtcNow }))
+   .WithName("HealthCheck");
+
+// D. Mapear el endpoint del Hub de SignalR (URL a la que se conecta el cliente Unity: /hubs/game)
 app.MapHub<GameHub>("/hubs/game");
 
 app.MapControllers();
+
+// E. Notificación en consola al iniciar el servidor
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine(@"==================================================================");
+    Console.WriteLine(@"🚀 UNITY 2D MULTIPLAYER BACKEND SERVER IS ONLINE AND READY!");
+    Console.WriteLine(@"🌐 Root Status Signal  : http://localhost:5240/");
+    Console.WriteLine(@"❤️ Health Check        : http://localhost:5240/health");
+    Console.WriteLine(@"⚡ SignalR Game Hub    : http://localhost:5240/hubs/game");
+    Console.WriteLine(@"==================================================================");
+    Console.ResetColor();
+});
 
 app.Run();
