@@ -1,51 +1,74 @@
 # Unity 2D Multiplayer .NET Backend Template 🚀
 
-![.NET Core](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-13.0-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
-![SignalR](https://img.shields.io/badge/SignalR-Realtime-blue?style=for-the-badge&logo=aspnet)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Clean Architecture](https://img.shields.io/badge/Architecture-Clean_Architecture-brightgreen?style=for-the-badge)
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 9.0" />
+  <img src="https://img.shields.io/badge/C%23-13.0-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C# 13" />
+  <img src="https://img.shields.io/badge/SignalR-Realtime-blue?style=for-the-badge&logo=aspnet" alt="SignalR" />
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/Architecture-Clean_Architecture-brightgreen?style=for-the-badge" alt="Clean Architecture" />
+  <img src="https://img.shields.io/badge/Unity-2021.3%2B-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity" />
+</p>
+
+---
+
+## 📌 Tabla de Contenidos
+
+1. [Descripción General](#1-descripción-general)
+2. [Justificación Técnica del Stack](#2-justificación-técnica-del-stack-c--net-core)
+3. [Estructura del Proyecto](#3-estructura-del-proyecto)
+4. [Arquitectura del Sistema (Clean Architecture)](#4-arquitectura-del-sistema-clean-architecture)
+5. [Requisitos Funcionales y No Funcionales (SRS)](#5-requisitos-funcionales-y-no-funcionales-srs)
+6. [Modelo de Datos y Extensibilidad](#6-modelo-de-datos-y-extensibilidad)
+7. [Endpoints API y Señales de Estado](#7-endpoints-api-y-señales-de-estado)
+8. [Instalación y Ejecución Local](#8-instalación-y-ejecución-local)
+9. [Extracción e Integración del Cliente SignalR en Unity](#9-extracción-e-integración-del-cliente-signalr-en-unity-net-standard-21)
+10. [Mecánicas de Juego y Extensibilidad (Plugin-Ready)](#10-mecánicas-de-juego-y-extensibilidad-plugin-ready)
 
 ---
 
 ## 1. Descripción General
 
-**Unity 2D Multiplayer .NET Backend Template** es una plantilla base (*starter template / boilerplate*) modular de alto rendimiento desarrollada en C# y .NET Core, diseñada para servir como infraestructura backend en **juegos multijugador 2D y entornos virtuales espaciales en Unity** (estilo *Gather Town*, RPGs 2D *top-down*, salas virtuales de interacción espacial o juegos sociales).
+**Unity 2D Multiplayer .NET Backend Template** es un *boilerplate / starter template* empresarial de alto rendimiento desarrollado en C# y .NET Core. Sirve como infraestructura backend completa para **juegos multijugador 2D y entornos virtuales espaciales en Unity** (estilo *Gather Town*, RPGs 2D *top-down*, mundos virtuales de proximidad o juegos sociales).
 
-La plantilla proporciona un motor desacoplado y listo para producción que gestiona la **presencia y movimiento 2D en tiempo real**, **mensajería espacial por proximidad y global**, **sincronización de objetos/nodos interactivos en el mapa** y **gestión de salas/instancias de juego**, manteniendo una arquitectura limpia y extensible.
+El motor gestiona de forma desacoplada la **sincronización de presencia y movimiento 2D en tiempo real**, **mensajería espacial por proximidad y global**, **interacción con objetos/nodos del mapa** y la **gestión de instancias de juego**, manteniendo los principios de Clean Architecture.
 
-### Propósito Técnico y Arquitectónico
-* **Plantilla Reutilizable:** Eliminar el trabajo repetitivo al iniciar nuevos proyectos multijugador 2D en Unity, proporcionando una base sólida con WebSockets, persistencia y Clean Architecture.
-* **Escalabilidad y Baja Latencia:** Sincronizar el estado de múltiples jugadores en planos cartesianos 2D con latencias mínimas y capacidad de escalado horizontal mediante Redis Backplane.
+> [!TIP]
+> **Ventaja Clave:** Proporciona scripts de automatización multiplataforma para extraer las librerías cliente oficiales de SignalR en perfil **.NET Standard 2.1**, listas para importar directamente en Unity sin depender de paquetes de terceros.
 
 ---
 
 ## 2. Justificación Técnica del Stack (C# / .NET Core)
 
-La elección de **C# y .NET Core** como stack primario del servidor backend permite una integración nativa y transparente con juegos creados en **Unity**:
-
-* 🤝 **Unificación de Lenguaje con el Cliente Unity 2D:**
-  Unity utiliza C# como su lenguaje principal de desarrollo. Implementar el servidor en C# y .NET permite **compartir DTOs, estructuras de datos, enumeraciones y lógica de dominio** entre cliente y servidor, reduciendo errores de serialización y acelerando el ritmo de desarrollo.
-
-* ⚡ **SignalR para WebSockets de Alto Rendimiento:**
-  ASP.NET Core SignalR abstrae la comunicación en tiempo real cliente-servidor mediante WebSockets (con fallback automático). Ofrece un manejo nativo de grupos por sala (*Rooms*), difusión de coordenadas $X,Y$ y escalabilidad distribuida mediante Redis Backplane.
-
-* 🚀 **Rendimiento, Concurrencia y Bajo Consumo:**
-  Gracias al servidor Kestrel, la optimización de memoria con `Span<T>` / `Memory<T>` y el modelo de concurrencia asíncrona (`async`/`await`), .NET permite procesar miles de mensajes por segundo con un consumo de recursos muy reducido.
-
-* 🧩 **Clean Architecture e Inyección de Dependencias:**
-  Facilita el desacoplamiento de componentes, promueve principios SOLID, permite realizar pruebas unitarias sobre casos de uso sin depender del servidor web o la base de datos, e integra patrones como CQRS y Repository.
-
-* 🐳 **Preparado para Contenerización (Docker):**
-  Despliegue ágil en contenedores Linux optimizados, facilitando la integración continua (CI/CD) y la orquestación en plataformas como Kubernetes, Docker Swarm o servicios en la nube (AWS, Azure, GCP).
+* 🤝 **Unificación de Lenguaje con Unity:** Al usar C# tanto en el servidor como en el cliente Unity, se comparten DTOs, enumeraciones y modelos de dominio, eliminando discrepancias de serialización.
+* ⚡ **SignalR para WebSockets de Alta Concurrencia:** Abstrae la comunicación bidireccional en tiempo real, ofreciendo grupos por sala (*Rooms*), difusión espacial de coordenadas y soporte de escalado horizontal vía Redis Backplane.
+* 🚀 **Procesamiento de Bajo Consumo y Alta Velocidad:** Potenciado por Kestrel, asignación de memoria optimizada con `Span<T>` y procesamiento no bloqueante con `async/await`.
+* 🧩 **Clean Architecture:** Aislamiento total del núcleo del juego (*Domain*) respecto a bases de datos o frameworks web, facilitando pruebas unitarias e integración de patrones CQRS.
+* 🐳 **Contenerización Nativa:** Despliegue en contenedores Docker livianos listos para orquestación en Kubernetes o plataformas en la nube.
 
 ---
 
-## 3. Arquitectura del Sistema (Clean Architecture)
+## 3. Estructura del Proyecto
 
-El proyecto adopta **Clean Architecture** (Arquitectura Limpia), organizando el código en 4 capas concéntricas donde la capa de **Dominio** actúa como el núcleo independiente sin referencias externas.
+```text
+SenaVirtualBackend/
+├── Unity2DBackend.slnx               # Archivo de solución .NET
+├── README.md                         # Documentación principal del repositorio
+├── .gitignore                        # Reglas de exclusión para Git
+├── src/                              # Código fuente en Clean Architecture
+│   ├── Unity2D.Domain/               # Entidades puras y reglas de negocio
+│   ├── Unity2D.Application/          # Casos de uso, DTOs e interfaces de servicios
+│   ├── Unity2D.Infrastructure/       # EF Core, persistencia y Redis
+│   └── Unity2D.WebApi/               # Controllers, SignalR Hubs y Middlewares
+└── scripts/                          # Herramientas y Cliente Unity
+    ├── build-signalr-unity.bat       # Script extractor de DLLs para Windows
+    ├── build-signalr-unity.sh        # Script extractor de DLLs para Linux/macOS
+    ├── README.md                     # Guía técnica de uso para desarrolladores Unity
+    └── UnityClient/                  # Componentes C# listos para Unity (NetworkManager.cs)
+```
 
-### Diagrama de Capas (Mermaid)
+---
+
+## 4. Arquitectura del Sistema (Clean Architecture)
 
 ```mermaid
 graph TD
@@ -65,7 +88,6 @@ graph TD
         Domain["Domain Layer<br/>(Entities, Value Objects, Domain Events, Enums)"]
     end
 
-    %% Relaciones de dependencia
     WebApi --> Application
     WebApi --> Infrastructure
     Infrastructure --> Application
@@ -78,118 +100,116 @@ graph TD
     style WebApi fill:#4a2e5d,stroke:#333,stroke-width:2px,color:#fff
 ```
 
-### Responsabilidad de las Capas
+### Responsabilidades por Capa
 
-1. 🟢 **`Domain` (Capa de Dominio):**
-   * Núcleo del sistema sin dependencias externas. Contiene entidades puras (`Player`, `Room`, `InteractiveNode`, `ChatLog`), reglas del mundo virtual y objetos de valor.
-
-2. 🔵 **`Application` (Capa de Aplicación):**
-   * Orquesta los casos de uso del juego (ej. `JoinRoomUseCase`, `MovePlayerCommand`, `SendSpatialChatMessage`). Define interfaces para repositorios, notificaciones en tiempo real y DTOs.
-
-3. 🟤 **`Infrastructure` (Capa de Infraestructura):**
-   * Implementa la persistencia de datos (Entity Framework Core con PostgreSQL o SQL Server), la distribución de estado con Redis y los servicios de autenticación/JWT.
-
-4. 🟣 **`WebApi` (Capa de Presentación / API):**
-   * Expone los puntos de entrada HTTP RESTful y los *SignalR Hubs* de tiempo real (`GameHub`, `ChatHub`), gestionando la seguridad, CORS y middlewares.
+| Capa | Proyecto | Responsabilidad |
+| :--- | :--- | :--- |
+| 🟢 **Dominio** | `Unity2D.Domain` | Entidades centrales (`Player`, `Room`, `InteractiveNode`), objetos de valor y reglas de negocio puras. |
+| 🔵 **Aplicación** | `Unity2D.Application` | Lógica de los casos de uso (`MovePlayerCommand`, `SendChatMessage`), DTOs e interfaces de servicios. |
+| 🟤 **Infraestructura** | `Unity2D.Infrastructure` | EF Core (PostgreSQL/SQL Server), servicios de autenticación JWT y Redis Backplane. |
+| 🟣 **Presentación** | `Unity2D.WebApi` | Servidor WebAPI, *SignalR Hubs* (`GameHub`), endpoints de estado y políticas CORS. |
 
 ---
 
-## 4. Requisitos Funcionales y No Funcionales (SRS Resumido)
+## 5. Requisitos Funcionales y No Funcionales (SRS)
 
 ### Requisitos Funcionales (RF)
-
-* 🔐 **RF-01: Autenticación y Control de Acceso**
-  * Validación e inicio de sesión de jugadores mediante JWT, asignando roles (`Player`, `Admin`, `Moderator`).
-* 📍 **RF-02: Movimiento y Presencia 2D en Tiempo Real**
-  * Recepción y retransmisión de posiciones $(X, Y)$, orientación del avatar y animación entre jugadores conectados a la misma sala o mapa.
-* 💬 **RF-03: Sistema de Chat Espacial (Proximidad) y Global**
-  * **Chat Espacial:** Distribución de mensajes basada en distancia euclidiana respecto al emisor ($R$ configurable).
-  * **Chat Global:** Canal de mensajería para toda la sala o mapa activo.
-* 🧩 **RF-04: Nodos y Objetos Interactivos del Mapa**
-  * Sincronización de estado e interacción con objetos 2D del escenario (puertas, cofres, reproductores de medios, enlaces externos, triggers de eventos).
-* 🗺️ **RF-05: Gestión de Salas e Instancias de Juego**
-  * Creación, configuración y control de aforo para salas de juego, mapas o zonas virtuales.
+* 🔐 **RF-01 Autenticación:** Inicio de sesión y validación de usuarios mediante JWT (Roles: `Player`, `Admin`, `Moderator`).
+* 📍 **RF-02 Presencia 2D:** Sincronización en tiempo real de coordenadas $(X, Y)$, dirección del avatar y estado.
+* 💬 **RF-03 Chat Espacial y Global:** Chat por distancia de proximidad euclidiana ($R$) y canales globales por sala.
+* 🧩 **RF-04 Objetos Interactivos:** Sincronización de estado e interacción con elementos 2D del escenario.
+* 🗺️ **RF-05 Gestión de Salas:** Creación, configuración y control de aforo en salas e instancias de juego.
 
 ### Requisitos No Funcionales (RNF)
-
-* ⚡ **RNF-01: Latencia y Rendimiento**
-  * Latencia de sincronización de movimiento $< 50\text{ ms}$ en condiciones normales de red.
-* 🧱 **RNF-02: Extensibilidad (Plugin-Ready)**
-  * Diseño basado en eventos que permite añadir nuevas mecánicas de juego sin modificar el código core del dominio.
-* 🐳 **RNF-03: Contenerización y Escalado Horizontal**
-  * Despliegue en Docker y soporte de escalado multi-instancia mediante Redis Backplane para SignalR.
-* 🛡️ **RNF-04: Seguridad en Comunicaciones**
-  * Cifrado en tránsito (TLS/WSS) y validación de tokens en cada handshake de WebSocket.
+* ⚡ **RNF-01 Latencia:** Sincronización de movimiento $< 50\text{ ms}$ en red local/estándar.
+* 🧱 **RNF-02 Extensibilidad:** Arquitectura *Plugin-Ready* basada en eventos.
+* 🐳 **RNF-03 Escalabilidad:** Sincronización multi-instancia mediante Redis Backplane para SignalR.
 
 ---
 
-## 5. Modelo de Datos y Extensiones
-
-El modelo relacional combina tipos estricto para entidades clave con metadatos en formato JSON para permitir la máxima flexibilidad por juego.
-
-### Entidades Principales
+## 6. Modelo de Datos y Extensibilidad
 
 | Entidad | Descripción | Campos Clave | Uso de `MetadataJson` |
 | :--- | :--- | :--- | :--- |
-| **`Player`** | Jugadores o usuarios en el juego. | `Id`, `Username`, `Role`, `PositionX`, `PositionY`, `Direction`, `CurrentRoomId` | Almacena skins, accesorios, estadísticas de juego o atributos personalizados sin modificar la tabla. |
-| **`Room`** | Salas, mapas 2D o instancias del mundo. | `Id`, `Name`, `Capacity`, `MapAssetUrl`, `IsActive` | Almacena configuraciones del mapa (límites $X,Y$, zonas de colisión, spawns y capas). |
-| **`InteractiveNode`** | Objetos interactivos posicionados en el mapa. | `Id`, `RoomId`, `PositionX`, `PositionY`, `Type` | Define la carga útil del objeto (ej. URLs, diálogos, recompensas, configuraciones custom). |
-| **`ChatLog`** | Historial de mensajes en el sistema. | `Id`, `RoomId`, `SenderId`, `Content`, `MessageType`, `Timestamp` | Guarda metadatos adicionales (ej. coordenadas de envío para auditoría de proximidad). |
+| **`Player`** | Representa los jugadores en el juego. | `Id`, `Username`, `Role`, `PositionX`, `PositionY`, `Direction` | Skins, accesorios y estadísticas de juego dinámicas. |
+| **`Room`** | Salas o mapas 2D del mundo virtual. | `Id`, `Name`, `Capacity`, `MapAssetUrl`, `IsActive` | Límites $X,Y$, zonas de colisión, spawns y capas del mapa. |
+| **`InteractiveNode`** | Objetos interactivos en el mapa. | `Id`, `RoomId`, `PositionX`, `PositionY`, `Type` | Carga útil del objeto (ej. diálogos, recompensas, triggers). |
+| **`ChatLog`** | Registro histórico de mensajes. | `Id`, `RoomId`, `SenderId`, `Content`, `MessageType`, `Timestamp` | Coordenadas $X,Y$ de envío para auditoría de proximidad. |
 
 ---
 
-## 6. Instalación y Ejecución Local
+## 7. Endpoints API y Señales de Estado
 
-### Prerrequisitos
-* [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Opcional para servicios)
-* [Git](https://git-scm.com/)
+El servidor expone endpoints de diagnóstico y tiempo real:
 
----
-
-### Opción A: Ejecución Local con .NET CLI
-
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/tu-usuario/nombre-repositorio.git
-   cd nombre-repositorio
-   ```
-
-2. **Restaurar dependencias:**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Compilar la solución:**
-   ```bash
-   dotnet build --configuration Debug
-   ```
-
-4. **Ejecutar el servidor WebAPI / WebSockets:**
-   ```bash
-   dotnet run --project src/Unity2D.WebApi
-   ```
+| Método | Endpoint | Descripción | Respuesta Ejemplo |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | Señal principal de estado del servidor | `{"status": "Online", "service": "Unity 2D Backend", "version": "1.0.0"}` |
+| `GET` | `/health` | Chequeo de salud del servicio | `{"status": "Healthy", "timestamp": "..."}` |
+| `POST` | `/hubs/game/negotiate` | Punto de negociación de WebSockets SignalR | `{"connectionId": "...", "availableTransports": [...]}` |
+| `GET` | `/openapi/v1.json` | Documentación OpenAPI / Swagger | Esquema OpenAPI 3.0 |
 
 ---
 
-### Opción B: Ejecución con Docker Compose 🐳
+## 8. Instalación y Ejecución Local
 
-Levanta el servidor WebAPI junto con PostgreSQL y Redis de forma inmediata:
+### Opción A: Mediante la CLI de .NET
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/FranTdev/Unity2DBackend.git
+cd Unity2DBackend
+
+# 2. Restaurar dependencias
+dotnet restore
+
+# 3. Compilar la solución
+dotnet build Unity2DBackend.slnx
+
+# 4. Iniciar el servidor backend (WebAPI + SignalR Hub)
+dotnet run --project src/Unity2D.WebApi
+```
+
+### Opción B: Despliegue con Docker Compose 🐳
 
 ```bash
 docker-compose up -d --build
 ```
 
-Para detener los servicios:
-```bash
-docker-compose down
+---
+
+## 9. Extracción e Integración del Cliente SignalR en Unity (.NET Standard 2.1)
+
+> [!NOTE]
+> Para conectar Unity (.NET Standard 2.1) con el servidor backend sin depender de librerías de terceros, proporcionamos scripts de extracción automatizados en la carpeta `scripts/`.
+
+### 🚀 Flujo Rápido en 3 Pasos
+
+```text
+[ 1. Ejecutar Script ]  ──►  [ 2. Arrastrar a Unity ]  ──►  [ 3. Usar NetworkManager ]
+ (scripts/build-signalr)      (Assets/Plugins/ & Scripts/)   (NetworkManager.Instance)
 ```
+
+1. **Ejecutar Script de Extracción:**
+   - **Windows:** Ejecuta [`scripts/build-signalr-unity.bat`](file:///c:/Users/FranT/Desktop/Back-End/.NET/SenaVirtualBackend/scripts/build-signalr-unity.bat)
+   - **Linux/macOS:** Ejecuta [`scripts/build-signalr-unity.sh`](file:///c:/Users/FranT/Desktop/Back-End/.NET/SenaVirtualBackend/scripts/build-signalr-unity.sh)
+2. **Copiar a Unity:**
+   - Mueve la carpeta generada `scripts/SignalR_Unity_Libs/` a `Assets/Plugins/` en tu proyecto de Unity.
+   - Mueve la carpeta `scripts/UnityClient/` a `Assets/Scripts/` en tu proyecto de Unity.
+3. **Consumo desde C# en Unity:**
+   Usa el componente [`NetworkManager.cs`](file:///c:/Users/FranT/Desktop/Back-End/.NET/SenaVirtualBackend/scripts/UnityClient/NetworkManager.cs):
+   ```csharp
+   using Unity2D.Client;
+
+   // Enviar movimiento 2D al servidor
+   await NetworkManager.Instance.SendMovementAsync("player-1", transform.position.x, transform.position.y);
+   ```
+
+*Consulta la [Guía Técnica de Scripts (`scripts/README.md`)](file:///c:/Users/FranT/Desktop/Back-End/.NET/SenaVirtualBackend/scripts/README.md) para más detalles.*
 
 ---
 
-## 7. Extensibilidad y Mecánicas de Juego (Plugin Architecture)
-
-La plantilla implementa un patrón **Plugin-Ready** mediante un Bus de Eventos orientados a interacción, permitiendo implementar mecánicas específicas para tu juego en Unity:
+## 10. Mecánicas de Juego y Extensibilidad (Plugin-Ready)
 
 ```mermaid
 sequenceDiagram
@@ -208,95 +228,7 @@ sequenceDiagram
 
 ---
 
-## 8. Integración del Cliente SignalR en Unity (.NET Standard 2.1) ⚡
-
-> [!NOTE]
-> **¿Por qué este proceso?**
-> El servidor backend utiliza ejecutables de alto rendimiento de .NET moderno (.NET 9 / .NET 10), mientras que Unity opera sobre el runtime **.NET Standard 2.1 (Mono / IL2CPP)**. Para evitar incompatibilidades de runtime o depender de paquetes de terceros no oficiales, extraemos de forma automatizada las DLLs oficiales de Microsoft `Microsoft.AspNetCore.SignalR.Client` (v8.0.11) compiladas explícitamente en perfil `netstandard2.1`.
-
----
-
-### 🚀 Integración Rápida en 3 Pasos
-
-```text
-[ 1. Ejecutar Script ]  ──►  [ 2. Arrastrar a Unity ]  ──►  [ 3. Ajustar Duplicados ]
- (build-signalr-unity)        (Assets/Plugins/)             (System.Text.Json.dll)
-```
-
-#### 1️⃣ Paso 1: Ejecutar el Script de Automatización
-Ejecuta con un solo clic el script correspondiente a tu sistema operativo desde la carpeta `scripts/`:
-
-* **Windows:**
-  ```cmd
-  scripts\build-signalr-unity.bat
-  ```
-* **Linux / macOS:**
-  ```bash
-  chmod +x scripts/build-signalr-unity.sh
-  ./scripts/build-signalr-unity.sh
-  ```
-
-*El script creará automáticamente la carpeta `SignalR_Unity_Libs/` con las 30 DLLs oficiales preparadas y eliminará el proyecto temporal.*
-
----
-
-#### 2️⃣ Paso 2: Importar DLLs en Unity
-Copia o arrastra la carpeta generada `SignalR_Unity_Libs/` a la ruta `Assets/Plugins/` dentro de tu proyecto de Unity:
-
-```text
-Assets/
-└── Plugins/
-    └── SignalR_Unity_Libs/
-        ├── Microsoft.AspNetCore.SignalR.Client.dll
-        ├── Microsoft.AspNetCore.SignalR.Client.Core.dll
-        ├── Microsoft.AspNetCore.Connections.Abstractions.dll
-        ├── System.Text.Json.dll
-        └── (resto de DLLs de soporte...)
-```
-
----
-
-#### 3️⃣ Paso 3: Resolver Conflicto de Duplicidad (si aplica)
-Si Unity muestra un aviso/error referente a DLL duplicada (ej. `System.Text.Json.dll` ya incluida por UPM):
-
-1. Abre en Unity la carpeta `Assets/Plugins/SignalR_Unity_Libs/`.
-2. Selecciona la DLL duplicada (ej. `System.Text.Json.dll`).
-3. En el panel **Inspector** (a la derecha), desmarca la casilla **Any Platform**.
-4. Haz clic en **Apply**.
-
----
-
-#### 🎮 Consumo desde C# en Unity
-
-En tus scripts de Unity ya puedes consumir la librería cliente oficial directamente:
-
-```csharp
-using Microsoft.AspNetCore.SignalR.Client;
-
-public class NetworkManager : MonoBehaviour
-{
-    private HubConnection _connection;
-
-    async void Start()
-    {
-        _connection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:5240/hubs/game")
-            .WithAutomaticReconnect()
-            .Build();
-
-        _connection.On<PlayerMovementDto>("OnPlayerMoved", (movement) => {
-            Debug.Log($"Jugador movido: {movement.PlayerId} a ({movement.PositionX}, {movement.PositionY})");
-        });
-
-        await _connection.StartAsync();
-        Debug.Log("¡Conectado exitosamente al servidor SignalR desde Unity!");
-    }
-}
-```
-
----
-
 <p align="center">
   <b>Unity 2D Multiplayer .NET Backend Template</b><br/>
-  <i>Base sólida de arquitectura limpia para el desarrollo de juegos multijugador 2D en Unity.</i>
+  <i>Desarrollado con arquitectura limpia, alto rendimiento y extensibilidad modular.</i>
 </p>
