@@ -232,6 +232,105 @@ sequenceDiagram
 
 ---
 
+## 8. Guía de Extracción e Integración de SignalR en Unity (.NET Standard 2.1) 📖
+
+Esta sección detalla el procedimiento profesional para compilar y extraer las dependencias DLL oficiales de **`Microsoft.AspNetCore.SignalR.Client`** compatibles con la arquitectura de **Unity** (Mono / .NET Standard 2.1), evitando el uso de herramientas de terceros o paquetes no oficiales de NuGet en la interfaz de Unity.
+
+---
+
+### 📋 Prerrequisitos
+
+1. **SDK de .NET** instalado en el sistema (`.NET 8`, `.NET 9` o `.NET 10`).
+2. **Unity** (versión 2021.3 LTS o superior, configurada en `Api Compatibility Level: .NET Standard 2.1`).
+
+---
+
+### 🛠️ Procedimiento de Extracción de DLLs
+
+Para evitar incompatibilidades con ejecutables modernos de .NET (como .NET 10) dentro de Unity, el paquete cliente se debe compilar como una biblioteca de clases (*Class Library*) forzada explícitamente a **`netstandard2.1`**.
+
+#### Paso 1: Abrir la terminal
+Navega en tu consola a la ruta `Assets/Plugins/` de tu proyecto de Unity o a cualquier ubicación temporal:
+
+```cmd
+cd C:\RutaDeTuProyecto\Assets\Plugins
+```
+
+#### Paso 2: Crear el proyecto puente con target `netstandard2.1`
+Ejecuta el siguiente comando para generar una biblioteca de clases configurada específicamente para el perfil de compatibilidad de Unity:
+
+```cmd
+dotnet new classlib -n SignalRUnityBuild -f netstandard2.1
+```
+
+#### Paso 3: Agregar el paquete oficial de SignalR
+Ingresa a la carpeta creada e instala la versión compatible del cliente de SignalR:
+
+```cmd
+cd SignalRUnityBuild
+dotnet add package Microsoft.AspNetCore.SignalR.Client --version 8.0.11
+```
+
+> **Nota:** La versión `8.0.11` garantiza estabilidad total con las especificaciones de `.NET Standard 2.1`.
+
+#### Paso 4: Compilar y exportar las DLLs consolidadas
+Publica el proyecto en modo `Release` para que el SDK reúna la DLL principal y todas sus dependencias auxiliares (`System.Text.Json`, `Microsoft.AspNetCore.Connections.Abstractions`, etc.) en una sola carpeta de salida:
+
+```cmd
+dotnet publish -c Release -o ..\SignalR_Unity_Libs
+```
+
+#### Paso 5: Limpieza de archivos temporales
+Regresa al directorio padre y elimina el proyecto puente de código fuente, dejando únicamente la carpeta compilada de binarios `SignalR_Unity_Libs`:
+
+```cmd
+cd ..
+rmdir /s /q SignalRUnityBuild
+```
+
+---
+
+### 📂 Estructura de Directorios Resultante en Unity
+
+Dentro de tu proyecto de Unity, la carpeta `Assets/` debe quedar organizada de la siguiente manera:
+
+```text
+Assets/
+└── Plugins/
+    └── SignalR_Unity_Libs/
+        ├── Microsoft.AspNetCore.SignalR.Client.dll
+        ├── Microsoft.AspNetCore.SignalR.Client.Core.dll
+        ├── Microsoft.AspNetCore.Connections.Abstractions.dll
+        ├── Microsoft.AspNetCore.Http.Connections.Client.dll
+        ├── Microsoft.AspNetCore.Http.Connections.Common.dll
+        ├── System.Text.Json.dll
+        └── (demás DLLs de soporte...)
+```
+
+---
+
+### ⚡ Verificación Final en Unity
+
+1. Vuelve al Editor de Unity y deja que reimporte los activos.
+2. Asegúrate de que los scripts que consumen el cliente incluyan la directiva de compilación:
+   ```csharp
+   using Microsoft.AspNetCore.SignalR.Client;
+   ```
+3. Revisa la ventana **Console** de Unity: no deben aparecer errores rojos de tipo *Unable to resolve reference* o de espacios de nombres faltantes.
+
+---
+
+### 💡 Solución de Problemas Comunes (*Troubleshooting*)
+
+* **Error de Duplicidad (`System.Text.Json` o bibliotecas del sistema):**
+  Si Unity indica un conflicto porque un paquete interno de UPM ya incluye `System.Text.Json.dll`:
+  1. Ve a `Assets/Plugins/SignalR_Unity_Libs/`.
+  2. Selecciona la DLL duplicada que marca el error.
+  3. En el panel **Inspector** de la derecha, desmarca la casilla **Any Platform** (o la casilla del Editor).
+  4. Haz clic en **Apply**.
+
+---
+
 <p align="center">
   <b>Unity 2D Multiplayer .NET Backend Template</b><br/>
   <i>Base sólida de arquitectura limpia para el desarrollo de juegos multijugador 2D en Unity.</i>
